@@ -1,64 +1,60 @@
 const globals = require("./globals");
 const _ = require("lodash");
+const checkIfProjectIdExists = require("./middlewares/checkIfProjectIdExists");
 
 module.exports = function(server) {
   server.get("/projects", (req, res) => {
-    res.json(globals.projects);
+    const { projects } = globals;
+    res.json(projects);
+  });
+
+  server.get("/projects/:id", checkIfProjectIdExists, (req, res) => {
+    const { projects } = globals;
+    const { project_index } = req;
+
+    res.json(projects[project_index]);
   });
 
   server.post("/projects", (req, res) => {
     const { id, title, tasks } = req.body;
+    const { projects } = globals;
 
-    globals.projects.push({
+    projects.push({
       id,
       title,
       tasks
     });
 
-    res.json(globals.projects);
+    res.json(projects);
   });
 
-  server.put("/projects/:id", (req, res) => {
-    const { id } = req.params;
+  server.put("/projects/:id", checkIfProjectIdExists, (req, res) => {
     const { title } = req.body;
+    const { projects } = globals;
+    const { project_index } = req;
 
-    const index = _.findIndex(globals.projects, { id: id });
+    projects[project_index].title = title;
 
-    if (index == -1) {
-      return res.status(400).json("Project not found");
-    }
-
-    globals.projects[index].title = title;
-
-    res.json(globals.projects);
+    res.json(projects);
   });
 
-  server.delete("/projects/:id", (req, res) => {
+  server.delete("/projects/:id", checkIfProjectIdExists, (req, res) => {
     const { id } = req.params;
+    const { projects } = globals;
+    const { project_index } = req;
 
-    const index = _.findIndex(globals.projects, { id: id });
+    projects.splice(project_index, 1);
 
-    if (index == -1) {
-      return res.status(400).json("Project not found");
-    }
-
-    globals.projects.splice(index, 1);
-
-    res.json(globals.projects);
+    res.json(projects);
   });
 
-  server.post("/projects/:id/tasks", (req, res) => {
+  server.post("/projects/:id/tasks", checkIfProjectIdExists, (req, res) => {
+    const { project_index } = req;
     const { title } = req.body;
-    const { id } = req.params;
+    const { projects } = globals;
 
-    const index = _.findIndex(globals.projects, { id: id });
+    projects[project_index].tasks.push(title);
 
-    if (index == -1) {
-      return res.status(400).json("Project not found");
-    }
-
-    globals.projects[index].tasks.push(title);
-
-    res.json(globals.projects);
+    res.json(projects);
   });
 };
