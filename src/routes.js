@@ -1,8 +1,11 @@
 const globals = require("./globals");
 const _ = require("lodash");
 const checkIfProjectIdExists = require("./middlewares/checkIfProjectIdExists");
+const countRequests = require("./middlewares/countRequests");
 
 module.exports = function(server) {
+  server.use(countRequests);
+
   server.get("/projects", (req, res) => {
     const { projects } = globals;
     res.json(projects);
