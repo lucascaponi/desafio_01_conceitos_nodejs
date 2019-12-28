@@ -1,0 +1,17 @@
+{
+  "name": "desafio_ambiente_e_conceiros_nodejs",
+  "version": "1.0.0",
+  "description": "https://github.com/Rocketseat/bootcamp-gostack-desafio-01/blob/master/README.md#desafio-01-conceitos-do-nodejs",
+  "main": "index.js",
+  "author": "LukasTsunami <prateadow@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "dev": "nodemon src/index.js"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.2"
+  }
+}
